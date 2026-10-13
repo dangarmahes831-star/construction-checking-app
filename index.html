@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Construction Site Checking</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
+header{background:#12345a;color:white;padding:20px 15px}
+header h2{margin:0 0 6px}
+header p{margin:0;font-size:13px;color:#dbeafe}
+main{max-width:800px;margin:auto;padding:14px}
+.card{background:white;padding:16px;border-radius:14px;margin-bottom:14px;box-shadow:0 3px 12px #0000000c}
+h3{margin:0 0 14px;color:#12345a}
+label{display:block;font-weight:bold;font-size:13px;margin:12px 0 6px}
+input,select,textarea,button{font:inherit;width:100%;padding:12px;border-radius:8px;border:1px solid #cbd5e1;background:white}
+textarea{min-height:75px;resize:vertical}
+button{border:0;background:#12345a;color:white;font-weight:bold;margin-top:12px;cursor:pointer}
+.green{background:#16803d}
+.orange{background:#b45309}
+.red{background:#b91c1c}
+.gray{background:#475569}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{font-size:12px;color:#64748b}
+.result{padding:12px;background:#eff6ff;border-radius:9px;margin-top:10px}
+.item{padding:12px;border:1px solid #e2e8f0;border-radius:10px;margin:9px 0;overflow-wrap:anywhere}
+.item b{color:#12345a}
+.badge{display:inline-block;padding:4px 8px;border-radius:5px;background:#e2e8f0;font-size:12px}
+footer{text-align:center;padding:18px;color:#64748b;font-size:12px}
+@media(max-width:420px){.grid{grid-template-columns:1fr}}
+@media print{
+.no-print,header,footer{display:none!important}
+body{background:white}
+main{max-width:100%;padding:0}
+.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h2>🏗️ Construction Site Checking</h2>
+<p>Flat • Room • Work Status • Report</p>
+</header>
+
+<main>
+
+<section class="card no-print">
+<h3>🔎 Work Checking</h3>
+
+<div class="grid">
+<div>
+<label>Flat Number</label>
+<select id="flat">
+<option>101</option><option>102</option>
+<option>201</option><option>202</option>
+<option>301</option><option>302</option>
+<option>401</option><option>402</option>
+<option>501</option><option>502</option>
+<option>601</option><option>602</option>
+<option>701</option><option>702</option>
+</select>
+</div>
+<div>
+<label>Area / Room</label>
+<select id="area">
+<option>Room 1</option>
+<option>Room 2</option>
+<option>Room 3</option>
+<option>Room 4</option>
+<option>Bathroom 1</option>
+<option>Bathroom 2</option>
+<option>Bathroom 3</option>
+<option>Bathroom 4</option>
+<option>Hall</option>
+<option>Dining Hall</option>
+<option>Kitchen</option>
+<option>Balcony</option>
+<option>Mandir</option>
+<option>Store Room</option>
+<option>Washing Area</option>
+</select>
+</div>
+</div>
+
+<label>Work Category</label>
+<select id="category">
+<option>Tiles</option>
+<option>Electrical</option>
+<option>Plumbing</option>
+<option>Civil</option>
+<option>Other</option>
+</select>
+
+<label>Work / Checking Point</label>
+<input id="point" placeholder="Example: Bathroom tile level">
+
+<label>Status</label>
+<select id="status">
+<option value="Pending">⏳ Pending / બાકી છે</option>
+<option value="Done">✅ Done / કામ થયું</option>
+<option value="Mistake">❌ Mistake / ભૂલ છે</option>
+</select>
+
+<label>Note / ભૂલની વિગત</label>
+<textarea id="note" placeholder="શું કામ બાકી છે અથવા શું સુધારવાનું છે?"></textarea>
+
+<label>Checked By</label>
+<input id="person" placeholder="Supervisor / Engineer name">
+
+<button class="green" onclick="saveRecord()">🔐 Password નાખીને Save કરો</button>
+<button class="gray" onclick="clearForm()">Clear Form</button>
+<div class="small">Save કરતાં પહેલાં પાસવર્ડ પૂછવામાં આવશે.</div>
+</section>
+
+<section class="card no-print">
+<h3>⚙️ Manage Data</h3>
+<p class="small">નવી Category ઉમેરો અથવા હાલની Category બદલો. ફેરફાર માટે પાસવર્ડ જરૂરી છે.</p>
+
+<label>નવી Category</label>
+<input id="newCategory" placeholder="નવી Category નું નામ">
+<button onclick="addCategory()">➕ Add Category</button>
+
+<label>નવી Area / Room</label>
+<input id="newArea" placeholder="નવી Room / Area નું નામ">
+<button onclick="addArea()">➕ Add Area</button>
+
+<label>નવી Checking Point</label>
+<input id="newPoint" placeholder="નવી Checking Point">
+<button onclick="addPoint()">➕ Add Checking Point</button>
+
+<button class="orange" onclick="changePassword()">🔑 Change Password</button>
+</section>
+
+<section class="card no-print">
+<h3>📊 Report Filter</h3>
+<div class="grid">
+<div>
+<label>Flat</label>
+<select id="rfFlat" onchange="renderReport()">
+<option value="">All Flats</option>
+<option>101</option><option>102</option>
+<option>201</option><option>202</option>
+<option>301</option><option>302</option>
+<option>401</option><option>402</option>
+<option>501</option><option>502</option>
+<option>601</option><option>602</option>
+<option>701</option><option>702</option>
+</select>
+</div>
+<div>
+<label>Status</label>
+<select id="rfStatus" onchange="renderReport()">
+<option value="">All Status</option>
+<option>Pending</option>
+<option>Done</option>
+<option>Mistake</option>
+</select>
+</div>
+</div>
+
+<label>Search</label>
+<input id="search" placeholder="Area / Category / Note શોધો" oninput="renderReport()">
+
+<div id="summary" class="result"></div>
+<button onclick="window.print()">🖨️ Print / Save PDF</button>
+<button class="gray" onclick="exportBackup()">⬇️ Backup Download</button>
+
+<label>Restore Backup File</label>
+<input type="file" id="backupFile" accept=".json,application/json">
+<button class="gray" onclick="importBackup()">Restore Backup</button>
+</section>
+
+<section class="card" id="reportCard">
+<h3>📋 Saved Work Report</h3>
+<div id="report"></div>
+</section>
+
+<footer>
+Construction Site Checking App<br>
+તમારો ડેટા આ બ્રાઉઝરમાં સેવ થાય છે.
+</footer>
+</main>
+
+<script>
+const KEY="constructionSiteCheckerDataV1";
+const DEFAULT_PASSWORD="Site@123";
+
+let db;
+
+function freshDB(){
+ return {
+  password:DEFAULT_PASSWORD,
+  records:[],
+  areas:[
+   "Room 1","Room 2","Room 3","Room 4",
+   "Bathroom 1","Bathroom 2","Bathroom 3","Bathroom 4",
+   "Hall","Dining Hall","Kitchen","Balcony",
+   "Mandir","Store Room","Washing Area"
+  ],
+  categories:["Tiles","Electrical","Plumbing","Civil","Other"],
+  points:[
+   "Level Checking","Alignment Checking","Finishing Checking",
+   "Material Checking","Leakage Checking","Other"
+  ]
+ };
+}
+
+function loadDB(){
+ try{
+  const old=localStorage.getItem(KEY);
+  db=old?JSON.parse(old):freshDB();
+  if(!db.records)db.records=[];
+  if(!db.areas)db.areas=freshDB().areas;
+  if(!db.categories)db.categories=freshDB().categories;
+  if(!db.points)db.points=freshDB().points;
+  if(!db.password)db.password=DEFAULT_PASSWORD;
+ }catch(e){
+  db=freshDB();
+ }
+}
+
+function persist(){
+ localStorage.setItem(KEY,JSON.stringify(db));
+}
+
+function esc(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function auth(){
+ const p=prompt("Password નાખો:");
+ if(p===null)return false;
+ if(p!==db.password){
+  alert("ખોટો Password!");
+  return false;
+ }
+ return true;
+}
+
+function fillSelect(id,values){
+ const el=document.getElementById(id);
+ const old=el.value;
+ el.innerHTML=values.map(v=>`<option>${esc(v)}</option>`).join("");
+ if(values.includes(old))el.value=old;
+}
+
+function refreshLists(){
+ fillSelect("area",db.areas);
+ fillSelect("category",db.categories);
+}
+
+function saveRecord(){
+ if(!auth())return;
+
+ const flat=document.getElementById("flat").value;
+ const area=document.getElementById("area").value;
+ const category=document.getElementById("category").value;
+ const point=document.getElementById("point").value.trim();
+ const status=document.getElementById("status").value;
+ const note=document.getElementById("note").value.trim();
+ const person=document.getElementById("person").value.trim();
+
+ if(!point){
+  alert("Checking Point લખો.");
+  return;
+ }
+
+ const now=new Date().toLocaleString("en-IN");
+
+ db.records.unshift({
+  id:Date.now(),
+  flat,area,category,point,status,note,person,
+  updated:now
+ });
+
+ try{
+  persist();
+  alert("✅ Record Save થયો!");
+  clearForm();
+  renderReport();
+ }catch(e){
+  alert("ડેટા સેવ થયો નથી. Browser storage તપાસો.");
+ }
+}
+
+function clearForm(){
+ document.getElementById("point").value="";
+ document.getElementById("note").value="";
+ document.getElementById("person").value="";
+ document.getElementById("status").value="Pending";
+}
+
+function addCategory(){
+ if(!auth())return;
+ const v=document.getElementById("newCategory").value.trim();
+ if(!v)return alert("Category લખો.");
+ if(db.categories.includes(v))return alert("આ Category પહેલેથી છે.");
+ db.categories.push(v);
+ persist();
+ refreshLists();
+ document.getElementById("newCategory").value="";
+ alert("Category ઉમેરાઈ.");
+}
+
+function addArea(){
+ if(!auth())return;
+ const v=document.getElementById("newArea").value.trim();
+ if(!v)return alert("Area લખો.");
+ if(db.areas.includes(v))return alert("આ Area પહેલેથી છે.");
+ db.areas.push(v);
+ persist();
+ refreshLists();
+ document.getElementById("newArea").value="";
+ alert("Area ઉમેરાયો.");
+}
+
+function addPoint(){
+ if(!auth())return;
+ const v=document.getElementById("newPoint").value.trim();
+ if(!v)return alert("Checking Point લખો.");
+ if(!db.points.includes(v))db.points.push(v);
+ persist();
+ document.getElementById("point").value=v;
+ document.getElementById("newPoint").value="";
+ alert("Checking Point તૈયાર છે. હવે Status પસંદ કરીને Save કરો.");
+}
+
+function changePassword(){
+ if(!auth())return;
+ const p=prompt("નવો Password લખો:");
+ if(!p)return alert("Password બદલાયો નથી.");
+ if(p.length<4)return alert("ઓછામાં ઓછા 4 અક્ષરનો Password રાખો.");
+ const confirmP=prompt("નવો Password ફરી લખો:");
+ if(p!==confirmP)return alert("બંને Password સરખા નથી.");
+ db.password=p;
+ persist();
+ alert("Password બદલાઈ ગયો.");
+}
+
+function renderReport(){
+ const flat=document.getElementById("rfFlat").value;
+ const status=document.getElementById("rfStatus").value;
+ const q=document.getElementById("search").value.toLowerCase();
+
+ const rows=db.records.filter(r=>
+  (!flat||r.flat===flat)&&
+  (!status||r.status===status)&&
+  [r.flat,r.area,r.category,r.point,r.status,r.note,r.person]
+   .join(" ").toLowerCase().includes(q)
+ );
+
+ const done=rows.filter(r=>r.status==="Done").length;
+ const pending=rows.filter(r=>r.status==="Pending").length;
+ const mistakes=rows.filter(r=>r.status==="Mistake").length;
+
+ document.getElementById("summary").innerHTML=
+  `Total: <b>${rows.length}</b> &nbsp; | &nbsp; `+
+  `✅ Done: <b>${done}</b> &nbsp; | &nbsp; `+
+  `⏳ Pending: <b>${pending}</b> &nbsp; | &nbsp; `+
+  `❌ Mistake: <b>${mistakes}</b>`;
+
+ const report=document.getElementById("report");
+ if(!rows.length){
+  report.innerHTML="<p>No records found. પહેલાં checking કરીને Save કરો.</p>";
+  return;
+ }
+
+ report.innerHTML=rows.map(r=>`
+  <div class="item">
+   <b>Flat ${esc(r.flat)} — ${esc(r.area)}</b><br>
+   <span class="badge">${esc(r.category)}</span>
+   <span class="badge">${esc(r.status)}</span>
+   <p><b>Work:</b> ${esc(r.point)}</p>
+   <p><b>Note:</b> ${esc(r.note||"—")}</p>
+   <p><b>Checked By:</b> ${esc(r.person||"—")}</p>
+   <p class="small">Date & Time: ${esc(r.updated)}</p>
+   <button class="red no-print" onclick="deleteRecord(${Number(r.id)})">Delete Record</button>
+  </div>
+ `).join("");
+}
+
+function deleteRecord(id){
+ if(!auth())return;
+ if(!confirm("આ Record Delete કરવો છે?"))return;
+ db.records=db.records.filter(r=>r.id!==id);
+ persist();
+ renderReport();
+}
+
+function exportBackup(){
+ const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="construction-site-backup.json";
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+function importBackup(){
+ if(!auth())return;
+ const file=document.getElementById("backupFile").files[0];
+ if(!file)return alert("પહેલાં Backup JSON ફાઇલ પસંદ કરો.");
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const incoming=JSON.parse(reader.result);
+   if(!Array.isArray(incoming.records)||
+      !Array.isArray(incoming.areas)||
+      !Array.isArray(incoming.categories)){
+    throw new Error("Invalid backup");
+   }
+   if(!confirm("હાલનો ડેટા Backup ડેટાથી બદલાશે. ચાલુ રાખવું?"))return;
+   db=incoming;
+   persist();
+   refreshLists();
+   renderReport();
+   alert("Backup Restore થયો.");
+  }catch(e){
+   alert("આ Backup ફાઇલ યોગ્ય નથી.");
+  }
+ };
+ reader.readAsText(file);
+}
+
+loadDB();
+refreshLists();
+renderReport();
+</script>
+</body>
+  </html>
