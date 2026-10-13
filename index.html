@@ -10,30 +10,31 @@ body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
 header{background:#12345a;color:white;padding:20px 15px}
 header h2{margin:0 0 6px}
 header p{margin:0;font-size:13px;color:#dbeafe}
-main{max-width:800px;margin:auto;padding:14px}
-.card{background:white;padding:16px;border-radius:14px;margin-bottom:14px;box-shadow:0 3px 12px #0000000c}
+main{max-width:850px;margin:auto;padding:14px}
+.card{background:white;padding:16px;border-radius:14px;margin-bottom:14px;box-shadow:0 3px 12px #0001}
 h3{margin:0 0 14px;color:#12345a}
 label{display:block;font-weight:bold;font-size:13px;margin:12px 0 6px}
 input,select,textarea,button{font:inherit;width:100%;padding:12px;border-radius:8px;border:1px solid #cbd5e1;background:white}
-textarea{min-height:75px;resize:vertical}
-button{border:0;background:#12345a;color:white;font-weight:bold;margin-top:12px;cursor:pointer}
+textarea{min-height:75px}
+button{border:0;background:#12345a;color:white;font-weight:bold;margin-top:10px;cursor:pointer}
 .green{background:#16803d}
-.orange{background:#b45309}
 .red{background:#b91c1c}
 .gray{background:#475569}
+.blue{background:#1769aa}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .small{font-size:12px;color:#64748b}
-.result{padding:12px;background:#eff6ff;border-radius:9px;margin-top:10px}
-.item{padding:12px;border:1px solid #e2e8f0;border-radius:10px;margin:9px 0;overflow-wrap:anywhere}
-.item b{color:#12345a}
-.badge{display:inline-block;padding:4px 8px;border-radius:5px;background:#e2e8f0;font-size:12px}
+.item{padding:12px;border:1px solid #dbe5f0;border-radius:10px;margin:9px 0;overflow-wrap:anywhere}
+.badge{display:inline-block;padding:5px 8px;border-radius:5px;background:#e2e8f0;font-size:12px;margin:3px}
+.Done{background:#dcfce7;color:#166534}
+.Pending{background:#fef3c7;color:#92400e}
+.Mistake{background:#fee2e2;color:#991b1b}
 footer{text-align:center;padding:18px;color:#64748b;font-size:12px}
 @media(max-width:420px){.grid{grid-template-columns:1fr}}
 @media print{
-.no-print,header,footer{display:none!important}
+.no-print,header,footer,.actions{display:none!important}
 body{background:white}
 main{max-width:100%;padding:0}
-.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+.card{box-shadow:none}
 }
 </style>
 </head>
@@ -41,7 +42,7 @@ main{max-width:100%;padding:0}
 
 <header>
 <h2>🏗️ Construction Site Checking</h2>
-<p>Flat • Room • Work Status • Report</p>
+<p>Flat • Room • Toilet • Work Status • Report</p>
 </header>
 
 <main>
@@ -62,17 +63,18 @@ main{max-width:100%;padding:0}
 <option>701</option><option>702</option>
 </select>
 </div>
+
 <div>
 <label>Area / Room</label>
 <select id="area">
-<option>Room 1U PU</option>
-<option>Room 2U PA</option>
-<option>Room 3D PU</option>
-<option>Room 4D PA</option>
-<option>Bathroom 1U PU</option>
-<option>Bathroom 2U PA</option>
-<option>Bathroom 3D PU</option>
-<option>Bathroom 4D PA</option>
+<option>Room 1 U.PU</option>
+<option>Room 2 U.PA</option>
+<option>Room 3 D.PU</option>
+<option>Room 4 D.PA</option>
+<option>Toilet 1 U.PU</option>
+<option>Toilet 2 U.PA</option>
+<option>Toilet 3 D.PU</option>
+<option>Toilet 4 D.PA</option>
 <option>Hall</option>
 <option>Dining Hall</option>
 <option>Kitchen</option>
@@ -94,7 +96,7 @@ main{max-width:100%;padding:0}
 </select>
 
 <label>Work / Checking Point</label>
-<input id="point" placeholder="Example: Bathroom tile level">
+<input id="point" placeholder="Example: Tile level checking">
 
 <label>Status</label>
 <select id="status">
@@ -111,30 +113,30 @@ main{max-width:100%;padding:0}
 
 <button class="green" onclick="saveRecord()">🔐 Password નાખીને Save કરો</button>
 <button class="gray" onclick="clearForm()">Clear Form</button>
-<div class="small">Save કરતાં પહેલાં પાસવર્ડ પૂછવામાં આવશે.</div>
+<p class="small">Default Password: Site@123</p>
 </section>
 
 <section class="card no-print">
 <h3>⚙️ Manage Data</h3>
-<p class="small">નવી Category ઉમેરો અથવા હાલની Category બદલો. ફેરફાર માટે પાસવર્ડ જરૂરી છે.</p>
 
 <label>નવી Category</label>
-<input id="newCategory" placeholder="નવી Category નું નામ">
-<button onclick="addCategory()">➕ Add Category</button>
+<div class="grid">
+<input id="newCategory" placeholder="Category નું નામ">
+<button onclick="addCategory()">Add Category</button>
+</div>
 
-<label>નવી Area / Room</label>
-<input id="newArea" placeholder="નવી Room / Area નું નામ">
-<button onclick="addArea()">➕ Add Area</button>
+<label>નવી Room / Area</label>
+<div class="grid">
+<input id="newArea" placeholder="Room / Area નું નામ">
+<button onclick="addArea()">Add Area</button>
+</div>
 
-<label>નવી Checking Point</label>
-<input id="newPoint" placeholder="નવી Checking Point">
-<button onclick="addPoint()">➕ Add Checking Point</button>
-
-<button class="orange" onclick="changePassword()">🔑 Change Password</button>
+<button class="gray" onclick="changePassword()">🔑 Change Password</button>
 </section>
 
 <section class="card no-print">
 <h3>📊 Report Filter</h3>
+
 <div class="grid">
 <div>
 <label>Flat</label>
@@ -149,6 +151,7 @@ main{max-width:100%;padding:0}
 <option>701</option><option>702</option>
 </select>
 </div>
+
 <div>
 <label>Status</label>
 <select id="rfStatus" onchange="renderReport()">
@@ -161,10 +164,11 @@ main{max-width:100%;padding:0}
 </div>
 
 <label>Search</label>
-<input id="search" placeholder="Area / Category / Note શોધો" oninput="renderReport()">
+<input id="search" placeholder="Room / Category / Note" oninput="renderReport()">
 
-<div id="summary" class="result"></div>
-<button onclick="window.print()">🖨️ Print / Save PDF</button>
+<div id="summary" class="item"></div>
+
+<button class="blue" onclick="window.print()">🖨️ Print / Save PDF</button>
 <button class="gray" onclick="exportBackup()">⬇️ Backup Download</button>
 
 <label>Restore Backup File</label>
@@ -172,7 +176,7 @@ main{max-width:100%;padding:0}
 <button class="gray" onclick="importBackup()">Restore Backup</button>
 </section>
 
-<section class="card" id="reportCard">
+<section class="card">
 <h3>📋 Saved Work Report</h3>
 <div id="report"></div>
 </section>
@@ -184,247 +188,237 @@ Construction Site Checking App<br>
 </main>
 
 <script>
-const KEY="constructionSiteCheckerDataV1";
+const KEY="constructionSiteCheckerFinalV1";
 const DEFAULT_PASSWORD="Site@123";
+
+const defaultAreas=[
+"Room 1 U.PU","Room 2 U.PA","Room 3 D.PU","Room 4 D.PA",
+"Toilet 1 U.PU","Toilet 2 U.PA","Toilet 3 D.PU","Toilet 4 D.PA",
+"Hall","Dining Hall","Kitchen","Balcony","Mandir","Store Room","Washing Area"
+];
 
 let db;
 
 function freshDB(){
- return {
-  password:DEFAULT_PASSWORD,
-  records:[],
-  areas:[
-   "Room 1","Room 2","Room 3","Room 4",
-   "Bathroom 1","Bathroom 2","Bathroom 3","Bathroom 4",
-   "Hall","Dining Hall","Kitchen","Balcony",
-   "Mandir","Store Room","Washing Area"
-  ],
-  categories:["Tiles","Electrical","Plumbing","Civil","Other"],
-  points:[
-   "Level Checking","Alignment Checking","Finishing Checking",
-   "Material Checking","Leakage Checking","Other"
-  ]
- };
+return {
+password:DEFAULT_PASSWORD,
+records:[],
+areas:[...defaultAreas],
+categories:["Tiles","Electrical","Plumbing","Civil","Other"]
+};
 }
 
 function loadDB(){
- try{
-  const old=localStorage.getItem(KEY);
-  db=old?JSON.parse(old):freshDB();
-  if(!db.records)db.records=[];
-  if(!db.areas)db.areas=freshDB().areas;
-  if(!db.categories)db.categories=freshDB().categories;
-  if(!db.points)db.points=freshDB().points;
-  if(!db.password)db.password=DEFAULT_PASSWORD;
- }catch(e){
-  db=freshDB();
- }
+try{
+db=JSON.parse(localStorage.getItem(KEY))||freshDB();
+if(!Array.isArray(db.records))db.records=[];
+if(!Array.isArray(db.areas))db.areas=[...defaultAreas];
+if(!Array.isArray(db.categories))db.categories=["Tiles","Electrical","Plumbing","Civil","Other"];
+if(!db.password)db.password=DEFAULT_PASSWORD;
+defaultAreas.forEach(a=>{if(!db.areas.includes(a))db.areas.unshift(a)});
+}catch(e){db=freshDB();}
 }
 
 function persist(){
- localStorage.setItem(KEY,JSON.stringify(db));
+localStorage.setItem(KEY,JSON.stringify(db));
 }
 
 function esc(s){
- return String(s??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[c]));
+return String(s??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
 }
 
 function auth(){
- const p=prompt("Password નાખો:");
- if(p===null)return false;
- if(p!==db.password){
-  alert("ખોટો Password!");
-  return false;
- }
- return true;
-}
-
-function fillSelect(id,values){
- const el=document.getElementById(id);
- const old=el.value;
- el.innerHTML=values.map(v=>`<option>${esc(v)}</option>`).join("");
- if(values.includes(old))el.value=old;
+const p=prompt("Password નાખો:");
+if(p===null)return false;
+if(p!==db.password){alert("ખોટો Password!");return false;}
+return true;
 }
 
 function refreshLists(){
- fillSelect("area",db.areas);
- fillSelect("category",db.categories);
+const area=document.getElementById("area");
+const oldArea=area.value;
+area.innerHTML=db.areas.map(a=>`<option>${esc(a)}</option>`).join("");
+if(db.areas.includes(oldArea))area.value=oldArea;
+
+const category=document.getElementById("category");
+const oldCat=category.value;
+category.innerHTML=db.categories.map(a=>`<option>${esc(a)}</option>`).join("");
+if(db.categories.includes(oldCat))category.value=oldCat;
 }
 
 function saveRecord(){
- if(!auth())return;
+if(!auth())return;
 
- const flat=document.getElementById("flat").value;
- const area=document.getElementById("area").value;
- const category=document.getElementById("category").value;
- const point=document.getElementById("point").value.trim();
- const status=document.getElementById("status").value;
- const note=document.getElementById("note").value.trim();
- const person=document.getElementById("person").value.trim();
+const point=document.getElementById("point").value.trim();
+if(!point){alert("Work / Checking Point લખો.");return;}
 
- if(!point){
-  alert("Checking Point લખો.");
-  return;
- }
+const record={
+id:Date.now().toString()+"-"+Math.random().toString(36).slice(2,7),
+flat:document.getElementById("flat").value,
+area:document.getElementById("area").value,
+category:document.getElementById("category").value,
+point:point,
+status:document.getElementById("status").value,
+note:document.getElementById("note").value.trim(),
+person:document.getElementById("person").value.trim(),
+updated:new Date().toLocaleString("en-IN")
+};
 
- const now=new Date().toLocaleString("en-IN");
+db.records.unshift(record);
 
- db.records.unshift({
-  id:Date.now(),
-  flat,area,category,point,status,note,person,
-  updated:now
- });
-
- try{
-  persist();
-  alert("✅ Record Save થયો!");
-  clearForm();
-  renderReport();
- }catch(e){
-  alert("ડેટા સેવ થયો નથી. Browser storage તપાસો.");
- }
+try{
+persist();
+clearForm();
+renderReport();
+alert("Record Save થયો!");
+}catch(e){
+alert("Save થયું નથી. Browser storage તપાસો.");
+}
 }
 
 function clearForm(){
- document.getElementById("point").value="";
- document.getElementById("note").value="";
- document.getElementById("person").value="";
- document.getElementById("status").value="Pending";
+document.getElementById("point").value="";
+document.getElementById("note").value="";
+document.getElementById("person").value="";
+document.getElementById("status").value="Pending";
 }
 
 function addCategory(){
- if(!auth())return;
- const v=document.getElementById("newCategory").value.trim();
- if(!v)return alert("Category લખો.");
- if(db.categories.includes(v))return alert("આ Category પહેલેથી છે.");
- db.categories.push(v);
- persist();
- refreshLists();
- document.getElementById("newCategory").value="";
- alert("Category ઉમેરાઈ.");
+if(!auth())return;
+const v=document.getElementById("newCategory").value.trim();
+if(!v)return alert("Category લખો.");
+if(db.categories.includes(v))return alert("Category પહેલેથી છે.");
+db.categories.push(v);
+persist();
+refreshLists();
+document.getElementById("newCategory").value="";
+alert("Category ઉમેરાઈ.");
 }
 
 function addArea(){
- if(!auth())return;
- const v=document.getElementById("newArea").value.trim();
- if(!v)return alert("Area લખો.");
- if(db.areas.includes(v))return alert("આ Area પહેલેથી છે.");
- db.areas.push(v);
- persist();
- refreshLists();
- document.getElementById("newArea").value="";
- alert("Area ઉમેરાયો.");
-}
-
-function addPoint(){
- if(!auth())return;
- const v=document.getElementById("newPoint").value.trim();
- if(!v)return alert("Checking Point લખો.");
- if(!db.points.includes(v))db.points.push(v);
- persist();
- document.getElementById("point").value=v;
- document.getElementById("newPoint").value="";
- alert("Checking Point તૈયાર છે. હવે Status પસંદ કરીને Save કરો.");
+if(!auth())return;
+const v=document.getElementById("newArea").value.trim();
+if(!v)return alert("Room / Area લખો.");
+if(db.areas.includes(v))return alert("આ Area પહેલેથી છે.");
+db.areas.push(v);
+persist();
+refreshLists();
+document.getElementById("newArea").value="";
+alert("Area ઉમેરાયો.");
 }
 
 function changePassword(){
- if(!auth())return;
- const p=prompt("નવો Password લખો:");
- if(!p)return alert("Password બદલાયો નથી.");
- if(p.length<4)return alert("ઓછામાં ઓછા 4 અક્ષરનો Password રાખો.");
- const confirmP=prompt("નવો Password ફરી લખો:");
- if(p!==confirmP)return alert("બંને Password સરખા નથી.");
- db.password=p;
- persist();
- alert("Password બદલાઈ ગયો.");
+if(!auth())return;
+const p=prompt("નવો Password લખો:");
+if(!p||p.length<4)return alert("ઓછામાં ઓછા 4 અક્ષરનો Password રાખો.");
+if(p!==prompt("Password ફરી લખો:"))return alert("Password સરખા નથી.");
+db.password=p;
+persist();
+alert("Password બદલાઈ ગયો.");
 }
 
-function renderReport(){
- const flat=document.getElementById("rfFlat").value;
- const status=document.getElementById("rfStatus").value;
- const q=document.getElementById("search").value.toLowerCase();
+function editRecord(id){
+if(!auth())return;
+const r=db.records.find(x=>String(x.id)===String(id));
+if(!r)return;
 
- const rows=db.records.filter(r=>
-  (!flat||r.flat===flat)&&
-  (!status||r.status===status)&&
-  [r.flat,r.area,r.category,r.point,r.status,r.note,r.person]
-   .join(" ").toLowerCase().includes(q)
- );
+document.getElementById("flat").value=r.flat;
+document.getElementById("area").value=r.area;
+document.getElementById("category").value=r.category;
+document.getElementById("point").value=r.point;
+document.getElementById("status").value=r.status;
+document.getElementById("note").value=r.note||"";
+document.getElementById("person").value=r.person||"";
 
- const done=rows.filter(r=>r.status==="Done").length;
- const pending=rows.filter(r=>r.status==="Pending").length;
- const mistakes=rows.filter(r=>r.status==="Mistake").length;
-
- document.getElementById("summary").innerHTML=
-  `Total: <b>${rows.length}</b> &nbsp; | &nbsp; `+
-  `✅ Done: <b>${done}</b> &nbsp; | &nbsp; `+
-  `⏳ Pending: <b>${pending}</b> &nbsp; | &nbsp; `+
-  `❌ Mistake: <b>${mistakes}</b>`;
-
- const report=document.getElementById("report");
- if(!rows.length){
-  report.innerHTML="<p>No records found. પહેલાં checking કરીને Save કરો.</p>";
-  return;
- }
-
- report.innerHTML=rows.map(r=>`
-  <div class="item">
-   <b>Flat ${esc(r.flat)} — ${esc(r.area)}</b><br>
-   <span class="badge">${esc(r.category)}</span>
-   <span class="badge">${esc(r.status)}</span>
-   <p><b>Work:</b> ${esc(r.point)}</p>
-   <p><b>Note:</b> ${esc(r.note||"—")}</p>
-   <p><b>Checked By:</b> ${esc(r.person||"—")}</p>
-   <p class="small">Date & Time: ${esc(r.updated)}</p>
-   <button class="red no-print" onclick="deleteRecord(${Number(r.id)})">Delete Record</button>
-  </div>
- `).join("");
+db.records=db.records.filter(x=>String(x.id)!==String(id));
+persist();
+window.scrollTo({top:0,behavior:"smooth"});
+alert("Record Edit કરવા માટે ફોર્મમાં ફેરફાર કરીને Save કરો.");
+renderReport();
 }
 
 function deleteRecord(id){
- if(!auth())return;
- if(!confirm("આ Record Delete કરવો છે?"))return;
- db.records=db.records.filter(r=>r.id!==id);
- persist();
- renderReport();
+if(!auth())return;
+if(!confirm("આ Record Delete કરવો છે?"))return;
+db.records=db.records.filter(r=>String(r.id)!==String(id));
+persist();
+renderReport();
+}
+
+function renderReport(){
+const flat=document.getElementById("rfFlat").value;
+const status=document.getElementById("rfStatus").value;
+const q=document.getElementById("search").value.toLowerCase();
+
+const rows=db.records.filter(r=>
+(!flat||r.flat===flat)&&
+(!status||r.status===status)&&
+[r.flat,r.area,r.category,r.point,r.status,r.note,r.person]
+.join(" ").toLowerCase().includes(q)
+);
+
+const done=rows.filter(r=>r.status==="Done").length;
+const pending=rows.filter(r=>r.status==="Pending").length;
+const mistakes=rows.filter(r=>r.status==="Mistake").length;
+
+document.getElementById("summary").innerHTML=
+`Total: <b>${rows.length}</b> | Done: <b>${done}</b> | Pending: <b>${pending}</b> | Mistake: <b>${mistakes}</b>`;
+
+const report=document.getElementById("report");
+
+if(!rows.length){
+report.innerHTML="<p>હજી કોઈ રેકોર્ડ નથી. પહેલાં Work Checking કરીને Save કરો.</p>";
+return;
+}
+
+report.innerHTML=rows.map(r=>`
+<div class="item">
+<b>Flat ${esc(r.flat)} — ${esc(r.area)}</b><br>
+<span class="badge">${esc(r.category)}</span>
+<span class="badge ${esc(r.status)}">${esc(r.status)}</span>
+<p><b>Work:</b> ${esc(r.point)}</p>
+<p><b>Note:</b> ${esc(r.note||"—")}</p>
+<p><b>Checked By:</b> ${esc(r.person||"—")}</p>
+<p class="small">Date & Time: ${esc(r.updated||"—")}</p>
+<div class="actions no-print">
+<button class="blue" onclick="editRecord('${esc(r.id)}')">Edit</button>
+<button class="red" onclick="deleteRecord('${esc(r.id)}')">Delete</button>
+</div>
+</div>`).join("");
 }
 
 function exportBackup(){
- const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
- a.href=url;
- a.download="construction-site-backup.json";
- a.click();
- URL.revokeObjectURL(url);
+const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;
+a.download="construction-site-backup.json";
+a.click();
+setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 function importBackup(){
- if(!auth())return;
- const file=document.getElementById("backupFile").files[0];
- if(!file)return alert("પહેલાં Backup JSON ફાઇલ પસંદ કરો.");
- const reader=new FileReader();
- reader.onload=()=>{
-  try{
-   const incoming=JSON.parse(reader.result);
-   if(!Array.isArray(incoming.records)||
-      !Array.isArray(incoming.areas)||
-      !Array.isArray(incoming.categories)){
-    throw new Error("Invalid backup");
-   }
-   if(!confirm("હાલનો ડેટા Backup ડેટાથી બદલાશે. ચાલુ રાખવું?"))return;
-   db=incoming;
-   persist();
-   refreshLists();
-   renderReport();
-   alert("Backup Restore થયો.");
-  }catch(e){
-   alert("આ Backup ફાઇલ યોગ્ય નથી.");
-  }
- };
- reader.readAsText(file);
+if(!auth())return;
+const file=document.getElementById("backupFile").files[0];
+if(!file)return alert("Backup JSON file પસંદ કરો.");
+
+const reader=new FileReader();
+reader.onload=()=>{
+try{
+const incoming=JSON.parse(reader.result);
+if(!Array.isArray(incoming.records)||!Array.isArray(incoming.areas)||!Array.isArray(incoming.categories))throw Error();
+if(!confirm("હાલનો ડેટા Backup થી બદલવો છે?"))return;
+db=incoming;
+defaultAreas.forEach(a=>{if(!db.areas.includes(a))db.areas.unshift(a)});
+persist();
+refreshLists();
+renderReport();
+alert("Backup Restore થયો.");
+}catch(e){alert("Backup file યોગ્ય નથી.");}
+};
+reader.readAsText(file);
 }
 
 loadDB();
@@ -432,4 +426,4 @@ refreshLists();
 renderReport();
 </script>
 </body>
-  </html>
+</html>
